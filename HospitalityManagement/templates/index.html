@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Khach San </title>
+    <link href="/static/CSS/style.css" rel="stylesheet"/>
+</head>
+<body>
+    <h1>f</h1>
+
+    <form method="get">
+        <input type="text" name="keyword" placeholder="nhap tu khoa can tim ..."/>
+        <input type="submit" value="Tim kiem"/>
+    </form>
+
+    <ul>
+        {% for u in menu %}
+        <li>{{u.name}} $$$ {{u.gia}}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
