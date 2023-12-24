@@ -1,6 +1,6 @@
 import math
 from flask import render_template, request, redirect, url_for, session, jsonify
-#from HospitalityManagement import app, login
+from HospitalityManagement import app, login
 import utils
 import cloudinary.uploader
 from flask_login import login_user, logout_user, login_required

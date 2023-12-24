@@ -114,7 +114,7 @@ class MyAdminIndexView(AdminIndexView):
     @expose('/')
     def index(self):
         return self.render('admin/index.html',
-                           stats=ulits.category_stats())
+                           stats=utils.category_stats())
 
 
 admin = Admin(app=app, name='QUAN TRI KHACH SAN',
