@@ -110,7 +110,7 @@ def user_signin():
                 return redirect(url_for(request.args.get('next', 'rooms_list')))
 
             else:
-                error_msg = "Username hoặc mật khẩu chưa chính xác!!!"
+                error_msg = "Tài khoản hoặc mật khẩu chưa chính xác!!!"
 
         except Exception as ex:
             error_msg = "Hệ thống đang có lỗi" + str(ex)

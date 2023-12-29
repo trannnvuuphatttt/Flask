@@ -1,3 +1,4 @@
+from HospitalityManagement import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String , Boolean, ForeignKey, Float, DateTime, Enum
 from HospitalityManagement import db
@@ -6,7 +7,7 @@ from datetime import datetime
 from enum import Enum as UserEnum
 from flask_login import UserMixin
 
-db = SQLAlchemy()
+# db = SQLAlchemy()
 
 class BaseModel(db.Model):
     __abstract__ = True
@@ -144,5 +145,6 @@ class ReceiptDetail(db.Model):
 
 
 if __name__ == '__main__':
-     db.create_all()
+    with app.app_context():
+        db.create_all()
 
