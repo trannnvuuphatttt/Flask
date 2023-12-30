@@ -5,6 +5,7 @@ import utils
 import cloudinary.uploader
 from flask_login import login_user, logout_user, login_required
 from HospitalityManagement.admin import *
+from flask_babel import Babel
 from HospitalityManagement.models import UserRole
 
 

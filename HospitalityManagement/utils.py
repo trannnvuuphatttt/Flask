@@ -1,6 +1,5 @@
 import json, os
 from HospitalityManagement import app, db
-
 import datetime
 from HospitalityManagement.models import Category, Room, UserRole, User, Comment, Reservation, ReservationDetail, RentDetail, ReceiptDetail, Customer, CustomerType
 import hashlib  #băm password
