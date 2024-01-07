@@ -32,28 +32,19 @@ def general_info(): #thông tin chung cần hiển thị mọi trang
 
 @login.user_loader
 def load_user(user_id):
-    return utils.get_user_by_id(user_id=user_id)
+    return User.query.get(user_id)
 
 
-@app.route('/admin-login', methods=['POST'])
-def admin_login():
-    try:
-        username = request.form.get('username')
-        password = request.form.get('password')
+@app.route('/admin/login', methods=['post'])
+def login_admin_process():
+    username = request.form.get('username')
+    password = request.form.get('password')
 
-        user = utils.check_login(username=username, password=password,
-                                 role=UserRole.ADMIN)
+    user = utils.check_login(username=username, password=password, role=UserRole.ADMIN)
+    if user:
+        login_user(user=user)
 
-        if user:
-            login_user(user=user)
-
-            return redirect(url_for(request.args.get('next', 'rooms_list')))
-        else:
-            error_msg = "Đăng nhập sai quyền! Vui lòng đăng nhập với quyền ADMIN!!!"
-    except Exception as ex:
-        error_msg = "Hệ thống đang có lỗi " + str(ex)
-
-    return render_template("admin/login.html", error_msg=error_msg)
+    return redirect('/admin')
 
 
 @app.route("/register", methods=['get', 'post'])
@@ -413,6 +404,7 @@ def paydetail(rent_id):
     return render_template('paydetail.html', rentdetails=rents, rooms=rooms,  customers=customers, err=err, type=type,
                            reservationdetails=reservations, users=users, reservation=reservation,
                            rent=rent, unit_price=unit_price, rate=rate)
+
 
 
 if __name__ == '__main__':

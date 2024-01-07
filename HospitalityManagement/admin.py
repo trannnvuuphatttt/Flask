@@ -117,14 +117,14 @@ class MyAdminIndexView(AdminIndexView):
                            stats=utils.category_stats())
 
 
-admin = Admin(app=app, name='QUẢN TRỊ KHÁCH SẠN', template_mode='bootstrap4',index_view=MyAdminIndexView())
+admin = Admin(app=app, name='QUẢN TRỊ KHÁCH SẠN',
+              template_mode='bootstrap4', index_view=MyAdminIndexView())
 
 
 admin.add_view(AuthenticatedModelView(Category, db.session, name='Loại Phòng'))
 admin.add_view(RoomView(Room, db.session, name='Phòng'))
-admin.add_view(CustomerTypeView(CustomerType, db.session, name='Loại khách'))
-admin.add_view(CustomerView(Customer, db.session, name='Khách hàng'))
-admin.add_view(UserView(User, db.session, name='Người dùng'))
+admin.add_view(CustomerTypeView(CustomerType, db.session, name='Loại Khách'))
+admin.add_view(CustomerView(Customer, db.session, name='Khách Hàng'))
+admin.add_view(UserView(User, db.session, name='Người Dùng'))
 admin.add_view(StatsView(name='Thống kê'))
-
-admin.add_view(LogoutView(name="Đăng xuất"))
+admin.add_view(LogoutView(name='Đăng xuất'))

@@ -2,7 +2,7 @@ import json, os
 from HospitalityManagement import app, db
 import datetime
 from HospitalityManagement.models import Category, Room, UserRole, User, Comment, Reservation, ReservationDetail, RentDetail, ReceiptDetail, Customer, CustomerType
-import hashlib  #băm password
+import hashlib
 from HospitalityManagement.models import User
 from flask_login import current_user
 from sqlalchemy import func
@@ -35,9 +35,9 @@ def check_login(username, password, role=UserRole.USER):
                                  User.user_role.__eq__(role)).first()
 
 
-def category_stats():    #thống kê theo loại phòng
-    return db.session.query(Category.id, Category.name, func.count(Room.id))\
-        .join(Room, Category.id.__eq__(Room.category_id), isouter=True)\
+def category_stats():  # thống kê theo loại phòng
+    return db.session.query(Category.id, Category.name, func.count(Room.id)) \
+        .join(Room, Category.id.__eq__(Room.category_id), isouter=True) \
         .group_by(Category.id, Category.name).all()
 
 
@@ -85,16 +85,16 @@ def get_comments(room_id, page=1):
     start = (page - 1) * page_size
     end = start + page_size
 
-    return Comment.query.filter(Comment.room_id.__eq__(room_id))\
-                        .order_by(-Comment.id).slice(start, end).all()
+    return Comment.query.filter(Comment.room_id.__eq__(room_id)) \
+        .order_by(-Comment.id).slice(start, end).all()
 
 
-def count_comment(room_id):  #đếm số cmt của sp
+def count_comment(room_id):  # đếm số cmt của sp
     return Comment.query.filter(Comment.room_id.__eq__(room_id)).count()
 
 
-def count_cart(cart):   #đếm số sản phẩm có trong giỏ
-    total_quantity, total_amount = 0, 0     #amount~ tổng tiền trong giỏ
+def count_cart(cart):  # đếm số sản phẩm có trong giỏ
+    total_quantity, total_amount = 0, 0  # amount~ tổng tiền trong giỏ
 
     if cart:
         for c in cart.values():
@@ -125,7 +125,7 @@ def add_reservation(cart):
         db.session.commit()
 
 
-#---------------------Thuê phòng
+# Thuê phòng
 def load_customer_type():
     return CustomerType.query.all()
 
@@ -216,9 +216,9 @@ def delete_reservation(id):
     db.session.commit()
 
 
-#-----------------------------Thanh toán
+# -----------------------------Thanh toán
 def load_rentdetails(id=None):
-    rent = RentDetail.query.filter(Room.active==True)
+    rent = RentDetail.query.filter(Room.active == True)
 
     if id:
         rent = rent.filter(RentDetail.id.__eq__(id))
@@ -264,23 +264,26 @@ def inactive_rent(rent_id):
     db.session.commit()
 
 
-#Thống kê
-def density_of_room_use_stats(month):   #Thống kê mật độ sử dụng theo tháng
-    p = db.session.query(Room.id, Room.name, (extract('day', RentDetail.checkout_date)-extract('day', RentDetail.checkin_date))+1)\
-                        .join(RentDetail, RentDetail.room_id.__eq__(Room.id), isouter=True)\
-                        .filter(extract('month', RentDetail.created_date) == month)\
-                        .group_by(Room.id, Room.name, (extract('day', RentDetail.checkout_date)-extract('day', RentDetail.checkin_date))+1)\
-                        .order_by(Room.id)
+# Thống kê
+def density_of_room_use_stats(month):  # Thống kê mật độ sử dụng theo tháng
+    p = db.session.query(Room.id, Room.name,
+                         (extract('day', RentDetail.checkout_date) - extract('day', RentDetail.checkin_date)) + 1) \
+        .join(RentDetail, RentDetail.room_id.__eq__(Room.id), isouter=True) \
+        .filter(extract('month', RentDetail.created_date) == month) \
+        .group_by(Room.id, Room.name,
+                  (extract('day', RentDetail.checkout_date) - extract('day', RentDetail.checkin_date)) + 1) \
+        .order_by(Room.id)
 
     return p.all()
 
 
-def room_month_stats(month):    #Thống kê doanh thu theo tháng
-    return db.session.query(Room.category_id, func.sum(ReceiptDetail.unit_price), func.count(RentDetail.id))\
-                            .join(RentDetail, RentDetail.room_id.__eq__(Room.id))\
-                            .filter(extract('month', RentDetail.created_date) == month)\
-                            .group_by(Room.category_id).all()
+def room_month_stats(month):  # Thống kê doanh thu theo tháng
+    return db.session.query(Room.category_id, func.sum(ReceiptDetail.unit_price), func.count(RentDetail.id)) \
+        .join(RentDetail, RentDetail.room_id.__eq__(Room.id)) \
+        .filter(extract('month', RentDetail.created_date) == month) \
+        .group_by(Room.category_id).all()
 
 
-def total_revenue(month):   #tổng doanh thu
-    return db.session.query(func.sum(ReceiptDetail.unit_price)).filter(extract('month', RentDetail.created_date) == month).all()
+def total_revenue(month):  # tổng doanh thu
+    return db.session.query(func.sum(ReceiptDetail.unit_price)).filter(
+        extract('month', RentDetail.created_date) == month).all()

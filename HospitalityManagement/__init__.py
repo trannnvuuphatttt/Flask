@@ -4,6 +4,7 @@ import cloudinary
 from flask_login import LoginManager
 from urllib.parse import quote
 from flask_babel import Babel
+#from flask_babelex import Babel
 
 
 app = Flask(__name__)
@@ -18,6 +19,8 @@ db = SQLAlchemy(app=app)
 login = LoginManager(app=app)
 
 babel = Babel(app)
+
+
 
 
 

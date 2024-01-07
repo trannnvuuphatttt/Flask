@@ -1,6 +1,6 @@
 from HospitalityManagement import app
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String , Boolean, ForeignKey, Float, DateTime, Enum
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Float, DateTime, Enum
 from HospitalityManagement import db
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -59,7 +59,8 @@ class User(BaseModel, UserMixin):
     active = Column(Boolean, default=True)
     phone = Column(Integer)
     email = Column(String(100))
-    avatar = Column(String(100))
+    avatar = Column(String(100),
+                    default='https://res.cloudinary.com/dxxwcby8l/image/upload/v1690461425/bqjr27d0xjx4u78ghp3s.jpg')
     joined_date = Column(DateTime, default=datetime.now())
     user_role = Column(Enum(UserRole), default=UserRole.USER)
 
