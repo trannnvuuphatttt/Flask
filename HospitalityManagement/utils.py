@@ -219,7 +219,7 @@ def delete_reservation(id):
 
 #-----------------------------Thanh toán
 def load_rentdetails(id=None):
-    rent = RentDetail.query.filter(Room.active==True)
+    rent = RentDetail.query.filter(RentDetail.active==True)
 
     if id:
         rent = rent.filter(RentDetail.id.__eq__(id))

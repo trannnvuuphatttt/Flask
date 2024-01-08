@@ -1,0 +1,51 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}THANH TOÁN{% endblock %}
+
+{% block content %}
+<h1 class="text-center subject">THANH TOÁN</h1>
+
+<form style="margin-left: 70%" class="search form-inline">
+    <input type="text" name="id" placeholder="Nhập mã phiếu thuê" />
+     <input type="submit" class="btn-submit btn-outline-success" value="Tìm kiếm">
+</form>
+
+{% if err_msg %}
+<div class="alert alert-danger">
+    <h3>{{ err }}</h3>
+</div>
+{% endif %}
+<div style="display: flex; flex-wrap: wrap;">
+{% if rentdetails %}
+ {% for r in rentdetails %}
+    {% if r.active == true %}
+    <div class="container-fluid" style="width: 33.33%; padding: 10px;">
+      <div class="info">
+        <div class="card" >
+          <div class="card-body" style="color: black">
+            <h2 class="card-title" id="rent_id" name="rent_id">Mã thuê phòng: P{{ r.id }}</h2>
+            {% for o in rooms %}
+            {% if rooms and r.room_id == o.id %}
+              <p class="card-text">Tên phòng: {{ o.name }}</p>
+              <h6 class="card-text">Số lượng khách thuê: {{ r.quantity }}</h6>
+              <h6 class="card-text">Ngày thuê phòng: {{ r.checkin_date }}</h6>
+              <h6 class="card-text">Ngày trả phòng: {{ r.checkout_date }}</h6>
+            {% endif %}
+            {% endfor %}
+            <a type="submit" style="margin:auto; display:block" class="btn btn-outline-info"
+                 href="{{url_for('paydetail', rent_id=r.id)}}"> Xác nhận thanh toán</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% else %}
+        <i><h6>Không có phiếu cần thanh toán!!!</h6></i>
+    {% endif %}
+ {% endfor %}
+{% else %}
+    <i><del><h6>Không tồn tại mã phòng này!!!</h6></del></i>
+    <br>
+{% endif %}
+<h7 style="padding:15px"><a href="{{ url_for('rooms_list') }}">Quay về trang danh sách phòng</a></h7>
+</div>
+{% endblock %}

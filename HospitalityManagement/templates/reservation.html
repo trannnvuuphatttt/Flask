@@ -1,0 +1,43 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Phiếu đặt phòng{% endblock %}
+
+{% block content %}
+    <br><br>
+        <h1 class="text-center" style="color: black; font-weight: bold">DANH SÁCH PHIẾU ĐẶT PHÒNG</h1>
+    <br><br>
+
+    <div class="re_detail">
+        <table>
+            <tr>
+                <td class="header">Mã phiếu</td>
+                <td class="header">Mã phòng</td>
+                <td class="header">Tên phòng</td>
+                <td class="header">Giá</td>
+                <td class="header">Ngày nhận phòng</td>
+                <td class="header">Ngày trả phòng</td>
+                <td class="header btheader"></td>
+            </tr>
+            {% for re in reservations %}
+                <tr>
+                    <td>{{ re.reservation_id }}</td>
+                    <td>{{ re.room_id }}</td>
+                    <td>
+                        {% for r in room %}
+                            {% if r.id==re.room_id %}
+                                {{ r.name }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{{ re.unit_price }}</td>
+                    <td>{{ re.checkin_date }}</td>
+                    <td>{{ re.checkout_date }}</td>
+                    <td><a href="{{ url_for('reservation_to_rent', roomid=re.room_id) }}" style="text-decoration: none;">
+                        <input type="submit" class="btn-submit btn-danger" name="{{re.id}}" value="Lập phiếu thuê"/>
+                    </a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <h7 style="padding:15px"><a href="{{ url_for('rooms_list') }}">Quay về trang danh sách phòng</a></h7>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'admin/base.html' %}
+
+{% block body %}
+
+{% if current_user.is_authenticated %}
+<h2 class="text-center text-primary">THỐNG KÊ SỐ LƯỢNG PHÒNG</h2>
+
+<div class="row" style="width:100%">
+  <div class="col-md-6 col-xs-12" style="text-align:center">
+    <table class="table">
+      <tr>
+        <th>Mã loại phòng</th>
+        <th>Loại phòng</th>
+        <th>Số lượng phòng</th>
+      </tr>
+      {% for s in stats %}
+      <tr>
+        <td>{{ s[0] }}</td>
+        <td>{{ s[1] }}</td>
+        <td>{{ s[2] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="col-md-6 col-xs-12">
+    <canvas id="myChart" width="400" height="400"></canvas>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  let labels = [], data=[], colors=[], borderColors=[]
+  let r, g, b
+  {% for s in stats %}
+    labels.push('{{ s[1] }}')
+    data.push({{ s[2] }})
+
+     r = parseInt(Math.random()*255)
+     g = parseInt(Math.random()*255)
+     b = parseInt(Math.random()*255)
+    colors.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+    borderColors.push(`rgba(${r}, ${g}, ${b}, 1)`)
+  {% endfor %}
+
+  window.onload = function() {
+    const ctx = document.getElementById('myChart').getContext('2d')
+    const myChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+          labels: labels,
+          datasets: [{
+              label: 'Thống kê phòng theo loại phòng',
+              data: data,
+              backgroundColor: colors,
+              borderColor: borderColors,
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+  }
+</script>
+
+{% else %}
+  {% include 'admin/login.html' %}
+{% endif %}
+{% endblock %}

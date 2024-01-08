@@ -87,7 +87,8 @@ class CustomerType(BaseModel):
     name = Column(String(50), nullable=False)
     coefficient = Column(Float, default=1)
     customer = relationship('Customer', backref='customertype', lazy=True)
-
+    def __str__(self):
+        return str(self.id)
 
 class Customer(BaseModel):
     __tablename__ = 'customer'
@@ -133,6 +134,8 @@ class RentDetail(BaseModel):
     customer = relationship('Customer', backref='rentdetail', lazy=True)
     receipt = relationship('ReceiptDetail', backref='rentdetail', lazy=True)
 
+    def __str__(self):
+        return str(self.id)
 
 class ReceiptDetail(db.Model):
     __tablename__ = 'receiptdetail'

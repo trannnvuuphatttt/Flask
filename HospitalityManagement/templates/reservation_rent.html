@@ -1,0 +1,63 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Phiếu đặt phòng -> Thuê phòng{% endblock %}
+
+{% block content %}
+
+<div class="rent_detail">
+    <h1 class="text-center text-danger">PHIẾU THUÊ PHÒNG</h1>
+    <br><br>
+    {% if err_msg %}
+    <div class="alert alert-danger">
+        <h3>{{ err_msg }}</h3>
+    </div>
+    {% endif %}
+    <form method="post" action="{{ url_for('reservation_to_rent', roomid=roomid) }}">
+        <div class="form-group select">
+            <div class="selectname select1">Mã phiếu đặt phòng</div>
+            <div class="selected select2">{{ reservation_detail.reservation_id }}</div>
+        </div>
+
+        <div class="form-group select">
+            <div class="selectname select1">Mã phòng</div>
+            <div class="selected select2">{{ reservation_detail.room_id }}</div>
+        </div>
+
+        <div class="form-group select">
+            <div class="selectname select1">Tên phòng</div>
+            <div class="selected select2">{{ room.name }}</div>
+        </div>
+
+        <div class="form-group select">
+            <div class="selectname select1">Giá</div>
+            <div class="selected select2">{{ reservation_detail.unit_price }} VNĐ</div>
+        </div>
+
+        <div class="form-group">
+            <label for="checkin">Ngày nhận phòng</label>
+            <input type="datetime-local" class="form-control" id="checkin" name="checkin" value="{{time_checkin}}" required/>
+        </div>
+
+        <div class="form-group">
+            <label for="checkout">Ngày trả phòng</label>
+            <input type="datetime-local" class="form-control" id="checkout" name="checkout" value="{{time_checkout}}"/>
+        </div>
+        <div class="space"></div>
+        <div class="form-group quantity select">
+            <div class="selectname"><label for="quantity">Chọn số lượng khách</label></div>
+            <div class="selected">
+                <select name="quantity" id="quantity">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+        </div>
+        <div class="space"></div>
+        <div class="btsave">
+            <input type="submit" class="btn-submit btn-danger" value="Lưu phiếu thuê phòng"/>
+        </div>
+    </form>
+</div>
+<h7 style="padding:15px"><a href="{{ url_for('rooms_list') }}">Quay về trang danh sách phòng</a></h7>
+{% endblock %}

@@ -1,0 +1,84 @@
+
+<nav class="navbar header navbar-expand-md bg-dark navbar-dark sticky-top" style="background-color: #676767 !important;">
+  <!-- Brand -->
+  <a class="navbar-brand" href="/">
+    <img src="{{ url_for('static', filename='images/aptos.png') }}" alt="Logo" style="width:50px;" class="rounded" />
+  </a>
+
+  <!-- Toggler/collapsibe Button -->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <!-- Navbar links -->
+  <div class="collapse navbar-collapse align-items-center" id="collapsibleNavbar">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link {% if 'category_id' not in request.args %}active{% endif %}" href="/">TRANG CHỦ</a>
+      </li>
+
+        <!-- Dropdown -->
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+          LOẠI PHÒNG
+        </a>
+
+        <div class="dropdown-menu">
+          {% for c in categories %}
+            <a class="dropdown-item nav-link"
+             href="#cate-info{{ c.id }}">{{ c.name }}</a>
+          {% endfor %}
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="collapse navbar-collapse d-flex justify-content-end align-items-center">
+    <ul class="navbar-nav">
+
+      <li class="nav-item">
+        <a class="nav-link text-info" href="{{ url_for('cart') }}">
+          GIỎ HÀNG<span class="badge badge-pill badge-info cart-counter" style="margin:5px">{{ cart_stats.total_quantity }}</span>
+        </a>
+      </li>
+
+  {% if current_user.is_authenticated %}
+  <li class="nav-item">
+    <a class="nav-link {% if 'reservation' in request.path %}active{% endif %}" href="/reservation">DANH SÁCH PHIẾU ĐẶT PHÒNG</a>
+  </li>
+         <li class="nav-item">
+    <a class="nav-link" href="/payment">PHIẾU THANH TOÁN</a>
+  </li>
+{% endif %}
+
+      {% if current_user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link text-primary" href="{{ url_for('home') }}">
+          {% if current_user.avatar %}
+            <img src="{{ current_user.avatar }}" class="rounded-circle" width="30" alt="current_user.name" />
+          {% else %}
+            <img src="{{ url_for('static', filename='images/avt.png')}}" class="rounded-circle" width="30" alt="current_user.name" />
+          {% endif %}
+          {{ current_user.username }}
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-danger" href="{{ url_for('user_signout') }}">ĐĂNG XUẤT</a>
+      </li>
+
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link text-danger" href="{{ url_for('register') }}">ĐĂNG KÝ</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-success" href="{{ url_for('user_signin') }}">ĐĂNG NHẬP</a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+
+
+

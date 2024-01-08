@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import cloudinary
 from flask_login import LoginManager
 from urllib.parse import quote
+from flask_babel import Babel
 
 app = Flask(__name__)
 app.secret_key = '&%V%@&(V%@%C%C#X%$%'
@@ -14,10 +15,10 @@ app.config['COMMENT_SIZE'] = 8
 
 db = SQLAlchemy(app=app)
 login = LoginManager(app=app)
-
+babel = Babel(app)
 
 cloudinary.config(
-    cloud_name='',
-    api_key='',
-    api_secret=''
+    cloud_name='dgm68hajt',
+    api_key='445342655699255',
+    api_secret='-RkgzrKOgwbd32E9oK71iOW_WDQ'
 )

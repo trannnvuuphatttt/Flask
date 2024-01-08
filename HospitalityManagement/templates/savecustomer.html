@@ -1,0 +1,123 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Khách hàng{% endblock %}
+
+{% block content %}
+
+<div class="customer">
+    <br><br>
+    <h1 class="text-center text-primary">DANH SÁCH KHÁCH HÀNG</h1>
+    <br><br>
+
+    {% if err_msg %}
+        <div class="alert alert-danger">
+            <h3>{{ err_msg }}</h3>
+        </div>
+    {% endif %}
+
+    <h6 class="alert alert-success">Lưu phiếu thuê phòng thành công!!!</h6>
+
+    <div class="info_room">
+        <p>Mã phiếu thuê phòng: <span class="text-primary">{{ r.id }}</span></p>
+        <p>Mã phòng: <span class="text-primary">{{ r.room_id }}</span></p>
+        <p>Tên phòng: <span class="text-primary">{{ room_getname.name }}</span></p>
+        <p>Số lượng khách: <span class="text-primary">{{ r.quantity }}</span></p>
+        <p>Ngày nhận phòng: <span class="text-primary">{{ r.checkin_date }}</span></p>
+        <p>Ngày trả phòng: <span class="text-primary">{{ r.checkout_date }}</span></p>
+    </div>
+
+    <br><br>
+    <h6 class="text-primary"><i>Vui lòng điền thông tin khách hàng vào bảng dưới đây</i></h6>
+    <br><br>
+    <form method="post" action="{{ url_for('savecustomer') }}">
+        <div class="parent_tb_customer">
+            <table class="tb_customer">
+            <tr>
+                <th>STT</th>
+                <th>Khách hàng</th>
+                <th>Loại khách</th>
+                <th>CMND/CCCD</th>
+                <th>Địa chỉ</th>
+            </tr>
+
+            <tr>
+                <td>1</td>
+                <td>
+                    <input required="required" type="text" class="form-control" id="cname"
+                           name="cname" placeholder="Nhập tên khách hàng... "/>
+                </td>
+                <td class="type">
+                    <select name="customertype_id" id="customertype_id">
+                        {% for c in customertype_id %}
+                                     <option value={{c.id}}> {{ c.name }} </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <input required="required" type="text" class="form-control" id="identity_card"
+                           name="identity_card" placeholder="Nhập số CMND/CCCD..."/>
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="address" name="address" placeholder="Nhập địa chỉ..."/>
+                </td>
+            </tr>
+
+            {% if r.quantity > 1 %}
+            <tr>
+                <td>2</td>
+                <td>
+                    <input required="required" type="text" class="form-control" id="cname2"
+                           name="cname2" placeholder="Nhập tên khách hàng... "/>
+                </td>
+                <td class="type">
+                    <select name="customertype_id2" id="customertype_id2">
+                        {% for c in customertype_id %}
+                                     <option value={{c.id}}> {{ c.name }} </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <input required="required" type="text" class="form-control" id="identity_card2"
+                           name="identity_card2" placeholder="Nhập số CMND/CCCD..."/>
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="address2" name="address2" placeholder="Nhập địa chỉ..."/>
+                </td>
+            </tr>
+            {% endif %}
+
+            {% if r.quantity > 2 %}
+            <tr>
+                <td>3</td>
+                <td>
+                    <input required="required" type="text" class="form-control" id="cname3"
+                           name="cname3" placeholder="Nhập tên khách hàng... "/>
+                </td>
+                <td class="type">
+                    <select name="customertype_id3" id="customertype_id3">
+                        {% for c in customertype_id %}
+                            <option value={{c.id}}> {{ c.name }} </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <input required="required" type="text" class="form-control" id="identity_card3"
+                           name="identity_card3" placeholder="Nhập số CMND/CCCD..."/>
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="address3" name="address3" placeholder="Nhập địa chỉ..."/>
+                </td>
+            </tr>
+            {% endif %}
+        </table>
+
+        </div>
+        <br><br>
+        <div class="btsave2">
+            <input type="submit" class="btn-submit btn-primary"  value="Lưu thông tin khách hàng"/>
+        </div>
+    </form>
+
+</div>
+<h7 style="padding:15px"><a href="{{ url_for('rooms_list') }}">Quay về trang danh sách phòng</a></h7>
+{% endblock %}

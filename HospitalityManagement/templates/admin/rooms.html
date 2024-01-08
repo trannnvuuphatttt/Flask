@@ -1,0 +1,76 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Danh sách phòng{% endblock %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+<div class="row">
+    <div class="col-md-2 col-xs-12 menu-room" >
+        <button class="btn btn-secondary" data-toggle="collapse" data-target="#demo">Menu chức năng</button>
+        <div id="demo" class="collapse">
+            <div class="btn-group-vertical">
+              <button type="button" class="btn btn-outline-secondary">
+                  <a href="#list_room">Danh sách phòng</a>
+              </button>
+              <button type="button" class="btn btn-outline-secondary"><a href="/reservation">Phiếu đặt phòng</a></button>
+              <button type="button" class="btn btn-outline-secondary"><a href="/rent_detail">Lập phiếu thuê</a></button>
+              <button type="button" class="btn btn-outline-secondary"><a href="{{ url_for('payment') }}">Thanh toán</a></button>
+              <button type="button" class="btn btn-outline-secondary">
+                  <a href="/admin">Trang quản trị</a>
+              </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-10 col-xs-12">
+        <h1 class="subject" id="list_room">DANH SÁCH PHÒNG</h1>
+        <hr>
+        <form class="search form-inline">
+            <input type="text" name="keyword" placeholder="Nhập từ khóa muốn tìm..." />
+            <input type="number" name="from_price" placeholder="Nhập giá bắt đầu..." />
+            <input type="number" name="to_price" placeholder="Nhập giá kết thúc..." />
+            <input type="submit" class="btn-submit btn-outline-success" value="Tìm kiếm">
+        </form>
+
+        <hr>
+
+        {% for c in categories %}
+        <div id="{{ url_for('home', category_id=c.id) }}" class="container-fluid-rooms">
+            <h2 id="cate-info{{ c.id }}" class="detail">{{ c.name }}</h2>
+            <table class="table-content table-striped table-hover" >
+                <tr>
+                    <th></th>
+                    <th>TÊN PHÒNG</th>
+                    <th>MÔ TẢ</th>
+                    <th>GIÁ/PHÒNG/2 NGƯỜI</th>
+                    <th></th>
+                </tr>
+
+                {% for r in rooms %}
+                {% if rooms and c.id==r.category_id %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('room_detail', room_id=r.id) }}">
+                            <img src="{{ url_for('static', filename=r.image) }}" width="250" class="rounded" alt="{{ r.name }}" />
+                        </a>
+                    </td>
+                    <td>{{ r.name }}</td>
+                    <td>{{ r.description }}</td>
+                    <td>{{ "{:,.0f}".format(r.price) }} VNĐ</td>
+                    <td>
+                        <a href="#" class="btn btn-primary" style="margin: 10px"
+                           onclick="addToCart({{ r.id }}, '{{ r.name }}', {{ r.price }})">Thêm vào giỏ</a>
+                        <a href="{{ url_for('room_detail', room_id=r.id) }}"  class="btn btn-outline-info" >Xem chi tiết</a>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </table>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+  {% include 'admin/login.html' %}
+{% endif %}
+{% endblock %}

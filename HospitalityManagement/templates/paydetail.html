@@ -1,0 +1,37 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}CHI TIẾT THANH TOÁN{% endblock %}
+
+{% block content %}
+<h1 class="text-center text-success subject">CHI TIẾT HÓA ĐƠN THANH TOÁN</h1>
+
+<form method="post" action="{{ url_for('paydetail', rent_id=rent.id) }}">
+
+  {% for r in reservationdetails %}
+    {% for v in reservation %}
+      {% for u in users %}
+        {% if reservationdetails and rent.reservation_id == r.reservation_id %}
+            {% for o in rooms %}
+                {% if rooms and r.room_id== o.id %}
+                    {% if v.user_id== u.id and v.id== r.reservation_id %}
+                      <p class="card-title" id="rent_id" name="rent_id" >Mã thuê phòng: P{{ rent.id }}</p>
+                      <b><p class="card-title">Tên người đặt phòng: {{ u.name }}</p></b>
+                      <p class="card-text">Tên phòng: {{ o.name }}</p>
+                      <p class="card-text">Số lượng: {{ rent.quantity }}</p>
+                      <p class="card-text">Giá tiền/2người/ngày: {{ "{:,.0f}".format(o.price) }} VNĐ</p>
+                      <p class="card-text">Hệ số khách nước ngoài: {{ (rate) }}</p>
+                      <p class="card-text">Ngày thuê phòng: {{ r.checkin_date }}</p>
+                      <p class="card-text">Ngày trả phòng: {{ r.checkout_date }}</p>
+                      <i><p style="color:red" class="card-text">Tổng tiền: {{ "{:,.0f}".format(unit_price) }} VNĐ</p></i>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+      {% endfor %}
+   {% endfor %}
+  {% endfor %}
+<h5 class="alert alert-success" style="margin:15px; text-align:center"> &COPY; Đã thanh toán thành công &COPY;</h5>
+    <a type="submit" class="btn btn-outline-info" style="margin:auto; display:block; width:100px" href="{{ url_for('payment') }}">OK</a>
+</form>
+
+{% endblock %}

@@ -1,22 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Khach San </title>
-    <link href="/static/CSS/style.css" rel="stylesheet"/>
-</head>
-<body>
-    <h1>f</h1>
+{% extends 'layout/base.html' %}
 
-    <form method="get">
-        <input type="text" name="keyword" placeholder="nhap tu khoa can tim ..."/>
-        <input type="submit" value="Tim kiem"/>
-    </form>
+{% block title %}TRANG CHỦ{% endblock %}
 
-    <ul>
-        {% for u in menu %}
-        <li>{{u.name}} $$$ {{u.gia}}</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% block content %}
+<!--<h1 class="subject">CHÀO MỪNG CÁC BẠN ĐẾN WEBSITE KHÁCH SẠN</h1>-->
+<form class="search form-inline">
+    <input type="text" name="keyword" placeholder="Nhập từ khóa muốn tìm..." />
+    <input type="number" name="from_price" placeholder="Nhập giá bắt đầu..." />
+    <input type="number" name="to_price" placeholder="Nhập giá kết thúc..." />
+    <input type="submit" class="btn-submit  btn-outline-success" value="Tìm kiếm">
+</form>
+
+<div id="demo" class="carousel slide" data-ride="carousel">
+
+  <!-- Indicators -->
+  <ul class="carousel-indicators">
+    <li data-target="#demo" data-slide-to="0" class="active"></li>
+    <li data-target="#demo" data-slide-to="1"></li>
+    <li data-target="#demo" data-slide-to="2"></li>
+  </ul>
+
+  <!-- The slideshow -->
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{{ url_for('static', filename='images/VIP1_1.jpg') }}" alt="name" width="1000" height="500">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='images/VIP1_2.jpg') }}" alt="name" width="1000" height="500">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='images/VIP1_3.jpg') }}" alt="name" width="1000" height="500">
+    </div>
+  </div>
+
+  <!-- Left and right controls -->
+  <a class="carousel-control-prev" href="#demo" data-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </a>
+  <a class="carousel-control-next" href="#demo" data-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </a>
+</div>
+
+<div class="card-date" style="padding: 10px;">
+    <label for="checkin_date" style="background-color: black;">Chọn ngày nhận</label>
+    <input type="datetime-local" required="required" id="checkin_date" name="checkin_date" style="width:300px; padding:10px; margin-right: 20px;"/>
+    <label for="checkout_date" style="background-color: black;">Chọn ngày trả</label>
+    <input type="datetime-local" required="required" id="checkout_date" name="checkout_date" style="width:300px; padding:10px;"/>
+</div>
+
+{% for c in categories %}
+<div id="{{ url_for('home', category_id=c.id) }}" class="container-fluid ">
+    <h2 id="cate-info{{ c.id }}" class="detail">{{ c.name }}</h2>
+
+    {% for r in rooms %}
+    {% if rooms and c.id==r.category_id %}
+    <div class="info">
+        <div class="card" >
+          <img class="img-fluid card-img-top" src="{{ r.image }}" alt="{{ r.name }}">
+          <div class="card-body">
+            <h4 class="card-title">{{ r.name }}</h4>
+            <p class="card-text" style="color: black">{{ "{:,.0f}".format(r.price) }} VNĐ</p>
+
+             {% if error_msg %}
+            <div id="error_msg" class="alert alert-danger" style="display: none;">
+                <h4>{{ error_msg }}</h4>
+            </div>
+            {% endif %}
+
+            <a href="#" class="btn card-btn btn-primary" style="background-color: black;" onclick="addToCart({{ r.id }}, '{{ r.name }}', {{ r.price }})"
+               data-toggle="modal" data-target="#myModal">Thêm vào giỏ hàng</a>
+              <!-- The Modal -->
+                <div class="modal" id="myModal">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+
+                      <!-- Modal Header -->
+                      <div class="modal-header">
+                        <h4 class="modal-title">Thông báo</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      </div>
+
+                      <!-- Modal body -->
+                      <div class="modal-body">
+                          Bạn đã thêm phòng <span class="text-danger">{{ r.name }}</span> vào giỏ hàng! Hãy vào giỏ hàng để xác nhận đặt phòng!!!
+                      </div>
+
+                      <!-- Modal footer -->
+                      <div class="modal-footer">
+                          <a class="nav-link text-info btn btn-outline-primary" href="{{ url_for('cart') }}">ĐẾN GIỎ HÀNG</a>
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">ĐÓNG</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            <a href="{{ url_for('room_detail', room_id=r.id) }}"  class="btn btn-outline-info" >Xem chi tiết</a>
+          </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endfor %}
+
+{% endblock %}

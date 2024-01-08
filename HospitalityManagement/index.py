@@ -29,30 +29,47 @@ def general_info(): #thông tin chung cần hiển thị mọi trang
     }
 
 
+
 @login.user_loader
 def load_user(user_id):
-    return utils.get_user_by_id(user_id=user_id)
+    return User.query.get(user_id)
 
 
-@app.route('/admin-login', methods=['POST'])
-def admin_login():
-    try:
-        username = request.form.get('username')
-        password = request.form.get('password')
+@app.route('/admin/login', methods=['post'])
+def login_admin_process():
+    username = request.form.get('username')
+    password = request.form.get('password')
 
-        user = utils.check_login(username=username, password=password,
-                                 role=UserRole.ADMIN)
+    user = utils.check_login(username=username, password=password, role=UserRole.ADMIN)
+    if user:
+        login_user(user=user)
 
-        if user:
-            login_user(user=user)
+    return redirect('/admin')
 
-            return redirect(url_for(request.args.get('next', 'rooms_list')))
-        else:
-            error_msg = "Đăng nhập sai quyền! Vui lòng đăng nhập với quyền ADMIN!!!"
-    except Exception as ex:
-        error_msg = "Hệ thống đang có lỗi " + str(ex)
-
-    return render_template("admin/login.html", error_msg=error_msg)
+# @login.user_loader
+# def load_user(user_id):
+#     return utils.get_user_by_id(user_id=user_id)
+#
+#
+# @app.route('/admin-login', methods=['POST'])
+# def admin_login():
+#     try:
+#         username = request.form.get('username')
+#         password = request.form.get('password')
+#
+#         user = utils.check_login(username=username, password=password,
+#                                  role=UserRole.ADMIN)
+#
+#         if user:
+#             login_user(user=user)
+#
+#             return redirect(url_for(request.args.get('next', 'rooms_list')))
+#         else:
+#             error_msg = "Đăng nhập sai quyền! Vui lòng đăng nhập với quyền ADMIN!!!"
+#     except Exception as ex:
+#         error_msg = "Hệ thống đang có lỗi " + str(ex)
+#
+#     return render_template("admin/login.html", error_msg=error_msg)
 
 
 @app.route("/register", methods=['get', 'post'])
@@ -176,18 +193,24 @@ def add_comment():
 
 @app.route('/api/add-cart', methods=['post'])
 def add_to_cart():
+    error_msg = "";
     data = request.json
     id = str(data.get('id'))
     name = data.get('name')
     price = data.get('price')
-    checkinDate = data.get('checkinDate')
-    checkoutDate = data.get('checkoutDate')
+    checkinDate = datetime.strptime(data.get('checkinDate'), '%Y-%m-%dT%H:%M')  # Chuyển đổi string sang datetime
+    checkoutDate = datetime.strptime(data.get('checkoutDate'), '%Y-%m-%dT%H:%M')  # Chuyển đổi string sang datetime
 
-    cart = session.get('cart')
-    if not cart:    #kiểm tra có giỏ hàng chưa
-        cart = {}
+    max_days_from_booking = 28
+    booking_date = datetime.now()
 
-    if id in cart:  #kiểm tra xem sp đó có trong giỏ hàng chưa
+    if (checkinDate - booking_date).days > max_days_from_booking:
+        return jsonify({'error': 'Ngày nhận phòng vượt quá 28 ngày kể từ ngày đặt. Vui lòng chọn ngày khác.'}), 400
+    if checkoutDate <= checkinDate:
+        return jsonify({'error': 'Ngày trả phòng phải sau ngày nhận phòng.'}), 400
+
+    cart = session.get('cart', {})  # Kiểm tra giỏ hàng và tạo mới nếu không tồn tại
+    if id in cart:
         cart[id]['quantity'] = cart[id]['quantity'] + 1
     else:
         cart[id] = {
@@ -195,14 +218,13 @@ def add_to_cart():
             'name': name,
             'price': price,
             'quantity': 1,
-            'checkin_date': checkinDate,
-            'checkout_date': checkoutDate
+            'checkin_date': checkinDate.strftime('%Y-%m-%dT%H:%M'),  # Chuyển đổi datetime sang string
+            'checkout_date': checkoutDate.strftime('%Y-%m-%dT%H:%M')  # Chuyển đổi datetime sang string
         }
 
     session['cart'] = cart
 
     return jsonify(utils.count_cart(cart))
-
 
 @app.route('/cart')
 @login_required
@@ -312,7 +334,7 @@ def savecustomer():
                                        customertype_id=customertype_id2, address=address2)
                     utils.add_customer(name=name3, rent_id=r.id, identity_card=identity_card3,
                                        customertype_id=customertype_id3, address=address3)
-                return redirect(url_for('rooms_list'))
+                return redirect(url_for('payment'))
         except Exception as ex:
             err_msg = 'LỖI - ' + str(ex)
     return render_template('savecustomer.html', rooms=rooms, reservations=reservations, rent=rent, r=r, err_msg=err_msg, room_getname=room_getname)
@@ -358,7 +380,7 @@ def reservation_to_rent(roomid):
         except Exception as ex:
             err_msg = 'LỖI - ' + str(ex)
 
-    return render_template('reservation_to_rent.html', reservation_detail=reservation_detail, customers=customers, err_msg=err_msg,
+    return render_template('reservation_rent.html', reservation_detail=reservation_detail, customers=customers, err_msg=err_msg,
                            reservations=reservations, time_checkin=time_checkin, time_checkout=time_checkout, room=room, roomid=roomid)
 
 
@@ -417,4 +439,5 @@ def paydetail(rent_id):
 if __name__ == '__main__':
     from HospitalityManagement.admin import *
 
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run(debug=True, use_debugger=False, use_reloader=False)

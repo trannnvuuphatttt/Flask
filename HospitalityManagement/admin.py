@@ -1,3 +1,5 @@
+from wtforms.fields.choices import SelectField
+
 from HospitalityManagement import db, app, utils
 from HospitalityManagement.models import Category, Room, UserRole, Customer, User, CustomerType
 from flask_admin.contrib.sqla import ModelView
@@ -5,6 +7,8 @@ from flask_admin import BaseView, expose, Admin, AdminIndexView
 from flask_login import logout_user, current_user, login_user
 from flask import redirect, request
 from datetime import datetime
+
+from flask_admin.form import FileUploadField, Select2Widget, Select2Field
 
 
 class AuthenticatedModelView(ModelView):
@@ -26,10 +30,11 @@ class BasicView(AuthenticatedModelView):
 
 
 class RoomView(BasicView):
-    column_exclude_list = ['image', 'active', 'created_date']  # ẩn cột
+    column_exclude_list = ['image','active', 'created_date']  # ẩn cột
     column_filters = ['name', 'price']  # bật bộ lọc
     column_searchable_list = ['name', 'description']  # bật box tìm kiếm
     column_sortable_list = ['id', 'name', 'price']  # sắp xếp
+
     column_labels = {
         'id': 'Mã phòng',
         'name': 'Tên phòng',
@@ -40,6 +45,18 @@ class RoomView(BasicView):
         'created_date': 'Ngày tạo',
         'image': 'Ảnh'
     }
+    form_extra_fields = {
+        'image_file': FileUploadField('Ảnh', base_path='path/to/your/uploaded/images/directory')
+    }
+
+    def scaffold_form(self):
+        form_class = super(RoomView, self).scaffold_form()
+        # Gán trường image_file và category vào form class
+        form_class.image = self.form_extra_fields['image_file']
+        return form_class
+
+    column_list = ['id', 'name', 'description', 'price', 'category']
+    column_details_list = ['id', 'name', 'description', 'price', 'category']
 
 
 class UserView(BasicView):
@@ -82,7 +99,8 @@ class CustomerView(BasicView):
         'customertype': 'Loại KH',
         'rentdetail': 'Mã phiếu thuê phòng'
     }
-
+    column_list = ['id', 'name', 'address', 'identity_card', 'customertype', 'rentdetail']
+    column_details_list =  ['id', 'name', 'address', 'identity_card', 'customertype', 'rentdetail']
 
 class AuthenticatedBaseView(BaseView):
     def is_accessible(self):

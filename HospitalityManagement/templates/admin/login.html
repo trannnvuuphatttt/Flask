@@ -7,14 +7,14 @@
 
 {% block content %}
 <div class="form-info">
-    <h1 class="subject text-center text-danger">ĐĂNG NHẬP</h1>
+    <h1 class="text-center text-info" style="font-size:35px; padding:10px">ĐĂNG NHẬP NGƯỜI DÙNG QUẢN TRỊ</h1>
 
     {% if error_msg %}
     <div class="alert alert-danger">
         <h4>{{ error_msg }}</h4>
     </div>
     {% endif %}
-    <form class="login" method="post" action="{{ url_for('user_signin') }}">
+    <form class="login" action="{{ url_for('admin_login') }}" method="post">
         <div class="form-group">
             <label for="username">Username: </label>
             <input type="text" name="username" class="form-control"
@@ -28,9 +28,6 @@
 
         <input type="submit" value="Đăng nhập" class="btn-submit btn-success"/>
     </form>
-
-    <h7><a href="{{ url_for('register', next='user_signin') }}">Bạn chưa có tài khoản? Đăng ký tại đây!!</a></h7>
-    <h7><a href="{{ url_for('home') }}">Quay về trang chủ</a></h7>
 </div>
 {% endblock %}
 
