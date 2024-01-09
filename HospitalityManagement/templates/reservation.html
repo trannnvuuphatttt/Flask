@@ -19,7 +19,7 @@
                 <td class="header btheader"></td>
             </tr>
             {% for re in reservations %}
-                <tr>
+                <tr style="color:black;">
                     <td>{{ re.reservation_id }}</td>
                     <td>{{ re.room_id }}</td>
                     <td>
@@ -33,7 +33,7 @@
                     <td>{{ re.checkin_date }}</td>
                     <td>{{ re.checkout_date }}</td>
                     <td><a href="{{ url_for('reservation_to_rent', roomid=re.room_id) }}" style="text-decoration: none;">
-                        <input type="submit" class="btn-submit btn-danger" name="{{re.id}}" value="Lập phiếu thuê"/>
+                        <input type="submit" class="btn-submit" style="background-color: black; color: white" name="{{re.id}}" value="Lập phiếu thuê"/>
                     </a></td>
                 </tr>
             {% endfor %}

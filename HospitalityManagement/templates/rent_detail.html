@@ -5,7 +5,7 @@
 {% block content %}
 
     <div class="rent_detail">
-        <h1 class="text-center text-primary">PHIẾU THUÊ PHÒNG</h1>
+        <h1 class="text-center text-primary" style="font-weight: bold">PHIẾU THUÊ PHÒNG</h1>
         <br><br>
 
         {% if err_msg %}
@@ -14,7 +14,7 @@
         </div>
         {% endif %}
 
-        <form method="post" action="{{ url_for('rent_detail') }}">
+        <form method="post" action="{{ url_for('rent_detail') }}" >
             <div class="form-group select">
                 <div class="selectname">
                     <label >Chọn phòng đặt</label>
@@ -35,7 +35,7 @@
                 <input type="datetime-local" class="form-control" id="checkin_date" name="checkin_date" required="required"/>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" >
                 <label for="checkout_date">Ngày trả phòng</label>
                 <input type="datetime-local" class="form-control" id="checkout_date" name="checkout_date"/>
             </div>
